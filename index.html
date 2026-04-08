@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Clock</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        height: 100vh;
+        color: white;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        /* Live animated background */
+        background: linear-gradient(-45deg, #1e3c72, #2a5298, #ff6a00, #ee0979);
+        background-size: 400% 400%;
+        animation: gradientMove 10s ease infinite;
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        font-size: 3rem;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 15px;
+        width: 90%;
+        max-width: 1000px;
+    }
+
+    .card {
+        background: rgba(255,255,255,0.1);
+        padding: 20px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .country {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .time {
+        font-size: 1.5rem;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>🌍 World Clock</h1>
+
+<div class="grid" id="clockGrid"></div>
+
+<script>
+const countries = [
+    { name: "London", tz: "Europe/London" },
+    { name: "New York", tz: "America/New_York" },
+    { name: "Los Angeles", tz: "America/Los_Angeles" },
+    { name: "Tokyo", tz: "Asia/Tokyo" },
+    { name: "Delhi", tz: "Asia/Kolkata" },
+    { name: "Sydney", tz: "Australia/Sydney" },
+    { name: "Berlin", tz: "Europe/Berlin" },
+    { name: "Paris", tz: "Europe/Paris" }
+];
+
+const grid = document.getElementById("clockGrid");
+
+function createClocks() {
+    countries.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "card";
+
+        div.innerHTML = `
+            <div class="country">${c.name}</div>
+            <div class="time" id="${c.tz}">--:--:--</div>
+        `;
+
+        grid.appendChild(div);
+    });
+}
+
+function updateClocks() {
+    countries.forEach(c => {
+        const el = document.getElementById(c.tz);
+
+        if (el) {
+            const time = new Date().toLocaleTimeString("en-US", {
+                timeZone: c.tz,
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+            });
+
+            el.textContent = time;
+        }
+    });
+}
+
+createClocks();
+updateClocks();
+setInterval(updateClocks, 1000);
+</script>
+
+</body>
+</html>
